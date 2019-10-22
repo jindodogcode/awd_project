@@ -33,6 +33,7 @@ require('header.php');
               name="email"
               placeholder="Email Address"
               minlength="6"
+              oninput="utils.checkEmailMatch(this)"
               required
             />
           </div>
@@ -44,6 +45,7 @@ require('header.php');
               name="email_confirm"
               placeholder="Confirm Email"
               minlength="6"
+              oninput="utils.checkEmailMatch(this)"
               required
             />
           </div>
@@ -59,6 +61,7 @@ require('header.php');
               pattern="^\S{8,64}$"
               title="Enter a password of 8-64 characters, no spaces"
               autocomplete="new-password"
+              oninput="utils.checkPasswordMatch(this)"
               required
             />
           </div>
@@ -74,6 +77,7 @@ require('header.php');
               pattern="^\S{8,64}$"
               title="Must match password"
               autocomplete="new-password"
+              oninput="utils.checkPasswordMatch(this)"
               required
             />
           </div>
@@ -133,6 +137,7 @@ require('header.php');
           <input type="submit" value="Submit" />
         </form>
       </section>
+      <script src="./static/js/utils.js"></script>
 
 <?php
 require('footer.php');

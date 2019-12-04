@@ -1,19 +1,14 @@
 <?php
-require('header.php');
+// Michael
+
+require_once('header.php');
 
 // get search term, trim white space off it, escape LIKE wildcard characters
-$q = preg_replace('/(?<!\\\)([%_])/', '\\\$1', trim($_POST['q'])); 
+$q = preg_replace('/(?<!\\\)([%_])/', '\\\$1', trim($_GET['q'])); 
 
 // connect to database
-$db = new mysqli('localhost', 'storefrontweb', 'storefrontweb', 'storefront');
-if (mysqli_connect_errno()) {
-  echo '<div class="error-wrapper">';
-  echo '<p>Error: Could not connect to database.<br />
-    Please try again later.</p>';
-  echo '</div>';
-  require('footer.php');
-  exit;
-}
+require_once('db.php');
+$db = db_connect();
 
 // search for term in Manufacturer name, category name, product name, product info, or product description
 $query = '
@@ -49,7 +44,7 @@ $result = $stmt->get_result();
           echo '<div class="error-wrapper">';
           echo '<p>No results found.</p>';
           echo '</div>';
-          require('footer.php');
+          require_once('footer.php');
           exit;
         }
         ?>
@@ -86,7 +81,7 @@ $result = $stmt->get_result();
       </section>
 
 <?php
-require('footer.php');
+require_once('footer.php');
 $result->close();
 $stmt->close();
 $db->close();

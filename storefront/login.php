@@ -1,5 +1,7 @@
 <?php
-require('header.php');
+// Ekene
+
+require_once('header.php');
 ?>
 
       <section class="login-section">
@@ -37,5 +39,5 @@ require('header.php');
       </section>
 
 <?php
-require('footer.php');
+require_once('footer.php');
 ?>

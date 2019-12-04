@@ -1,19 +1,14 @@
 <?php
-require('header.php');
+// Bruk
+
+require_once('header.php');
 
 // Get query, will be one of the categories
 $q = $_GET['q']; 
 
-// Connecto to database
-$db = new mysqli('localhost', 'storefrontweb', 'storefrontweb', 'storefront');
-if (mysqli_connect_errno()) {
-  echo '<div class="error-wrapper">';
-  echo '<p>Error: Could not connect to database.<br />
-    Please try again later.</p>';
-  echo '</div>';
-  require('footer.php');
-  exit;
-}
+// Connect to to database
+require_once('db.php');
+$db = db_connect();
 
 // find all products in category
 $query = '
@@ -71,5 +66,5 @@ $result = $stmt->get_result();
 $result->close();
 $stmt->close();
 $db->close();
-require('footer.php');
+require_once('footer.php');
 ?>

@@ -1,5 +1,7 @@
 <?php
-require('utils.php');
+// Ekene
+
+require_once('utils.php');
 session_start();
 
 if (!isset($_POST['email']) || !isset($_POST['password'])) {

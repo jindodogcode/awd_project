@@ -1,4 +1,5 @@
 <?php
+// Michael
 
 // a message with a boolean success status
 class Message
@@ -18,6 +19,7 @@ class Message
   }
 }
 
+
 // Handles logging in
 // returns a Message which can be passed to flash_redirect()
 // to be displayed
@@ -36,7 +38,10 @@ function login(string $email, string $password)
     return new Message(false, 'Bad email or password.');
   }
 
-  @$db = new mysqli('localhost', 'storefrontweb', 'storefrontweb', 'storefront');
+  // connect to db
+  require_once('db.php');
+  $login_strs = db_login_strs();
+  $db = new mysqli($login_strs[0], $login_strs[1], $login_strs[2], $login_strs[3]);
   if (mysqli_connect_errno()) {
     return new Message(false, 'Error: could not connect to the database. Try again later.');
   }
@@ -69,11 +74,6 @@ function login(string $email, string $password)
   }
 
   $_SESSION['uid'] = $user['customer_id'];
-  if (isset($_SESSION['scart'])) {
-    $_SESSION['ucart'] = $_SESSION['scart'];
-  } else {
-    $_SESSION['ucart'] = [];
-  }
   $result->close();
   $stmt->close();
 
@@ -141,7 +141,7 @@ function register(
     return new Message(false, 'Invalid password.');
   }
 
-  $password = password_hash($email.$password, PASSWORD_DEFAULT);
+  $password = password_hash($email . $password, PASSWORD_DEFAULT);
 
   // connect to db and start a transaction
   @$db = new mysqli('localhost', 'storefrontweb', 'storefrontweb', 'storefront');
@@ -164,7 +164,7 @@ function register(
     $db->rollback();
     $stmt->close();
     $db->close();
-    return new Message(false, 'Error: '.$error);
+    return new Message(false, 'Error: ' . $error);
   }
   $stmt->close();
   $customer_id = $db->insert_id;
@@ -183,7 +183,7 @@ function register(
     $db->rollback();
     $stmt->close();
     $db->close();
-    return new Message(false, 'Error '.$error);
+    return new Message(false, 'Error ' . $error);
   }
   $stmt->close();
   $address_id = $db->insert_id;
@@ -201,7 +201,7 @@ function register(
     $db->rollback();
     $stmt->close();
     $db->close();
-    return new Message(false, 'Error '.$error);
+    return new Message(false, 'Error ' . $error);
   }
   $stmt->close();
   // commit transaction
@@ -217,7 +217,7 @@ function register(
 function flash_redirect(Message $msg, string $url)
 {
   $is_success = $msg->is_success ? 'true' : 'false';
-  echo '<form id="hidden-form" method="post" action="' 
+  echo '<form id="hidden-form" method="post" action="'
     . htmlspecialchars($url) . '">';
   echo '<input type="hidden" name="is_success" value="'
     . htmlspecialchars($is_success) . '">';
@@ -225,6 +225,23 @@ function flash_redirect(Message $msg, string $url)
     . htmlspecialchars($msg->text) . '">';
   echo '</form>';
   echo '<script type="text/javascript" src="static/js/utils.js"></script>';
-  echo '<script type="text/javascript"> utils.submitHiddenForm(); </script>';
+  echo '<script type="text/javascript"> 
+    history.replaceState({}, "", document.referrer);
+    utils.submitHiddenForm(); </script>';
 }
-?>
+
+// checks if a user is logged in
+// used to prevent peoplefrom going places they shouldn't
+function check_logged_in($uid)
+{
+  if (!isset($uid)) {
+    $msg = new Message(false, 'Must be logged in to access account settings.');
+    flash_redirect($msg, './');
+    exit;
+  }
+}
+
+function site_name()
+{
+  return '&lambda; Gear';
+}

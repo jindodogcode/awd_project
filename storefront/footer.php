@@ -2,9 +2,11 @@
 
 <footer>
   <div class="footer-info">
-    Footer Stuff goes here
+    <h2></h2>
   </div>
 </footer>
+
+<script src="./static/js/utils.js"></script>
 </body>
 
 </html>

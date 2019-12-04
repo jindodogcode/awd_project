@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS CustomerAddresses (
     is_primary BOOLEAN NOT NULL DEFAULT FALSE,
 
     PRIMARY KEY (customer_id, address_id),
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id),
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE,
     FOREIGN KEY (address_id) REFERENCES Addresses(address_id)
 );
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS Payments (
     address_id BIGINT UNSIGNED NOT NULL,
     is_primary BOOLEAN NOT NULL DEFAULT FALSE,
 
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id),
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE,
     FOREIGN KEY (address_id) REFERENCES Addresses(address_id)
 );
 
@@ -84,11 +84,9 @@ CREATE TABLE IF NOT EXISTS Orders (
     total_price DECIMAL(9, 2) NOT NULL,
     customer_id BIGINT UNSIGNED NOT NULL,
     shipping_address_id BIGINT UNSIGNED NOT NULL,
-    payment_id BIGINT UNSIGNED NOT NULL,
 
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id),
-    FOREIGN KEY (shipping_address_id) REFERENCES Addresses(address_id),
-    FOREIGN KEY (payment_id) REFERENCES Payments(payment_id)
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (shipping_address_id) REFERENCES Addresses(address_id)
 );
 
 CREATE TABLE IF NOT EXISTS OrderProducts (
@@ -97,6 +95,6 @@ CREATE TABLE IF NOT EXISTS OrderProducts (
     quantity SMALLINT UNSIGNED NOT NULL,
 
     PRIMARY KEY (order_id, product_id),
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES Products(product_id)
 );

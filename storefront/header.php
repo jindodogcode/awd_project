@@ -1,8 +1,10 @@
 <?php
+// Michael
+
 session_start();
+require_once('utils.php');
 // Check for messages
 if (isset($_POST['msg']) && isset($_POST['is_success'])) {
-  require('utils.php');
   if ($_POST['is_success'] == 'true') {
     $is_success = true;
   } else {
@@ -16,14 +18,10 @@ if (isset($_SESSION['uid'])) {
   $uid = $_SESSION['uid'];
 }
 // check for user and session cart
-if (isset($uid) && isset($_SESSION['ucart'])) {
+if (isset($_SESSION['cart'])) {
   // user cart
-  $cart = $_SESSION['ucart'];
-} else if (isset($_SESSION['scart'])) {
-  // session cart
-  $cart = $_SESSION['scart'];
+  $cart = $_SESSION['cart'];
 } else {
-  // empty cart
   $cart = [];
 }
 
@@ -35,29 +33,33 @@ define('HTML_FILTER', ENT_COMPAT | ENT_HTML5);
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Title Here</title>
-  <link rel="stylesheet" href="static/css/style.css" />
+  <title>Lambda Gear</title>
+  <link rel="stylesheet" href="./static/css/style.css" />
+  <link rel="icon" href="./static/images/favicon.png" />
 </head>
 
 <body>
   <header>
     <div class="header-brand-wrapper">
       <div class="header-logo-wrapper">
-        <div>
-          Logo here
-        </div>
+        <img src="./static/images/logo.png" alt="Lambda Logo" />
       </div>
       <div class="header-name-wrapper">
-        <a href="./index.php"><h1>&lambda; Gear</h1></a>
+        <a href="./index.php">
+          <h1><?php echo site_name(); ?></h1>
+        </a>
       </div>
     </div>
     <div class="header-account-links-wrapper">
       <ul class="header-account-links">
         <?php
-        $cart_size = count($cart);
+        $cart_size = 0;
+        foreach ($cart as $k => $v) {
+          $cart_size += $v;
+        }
         if ($cart_size > 0) {
-          echo '<li><a href="./cart.php">Cart('.
-            htmlspecialchars($cart_size, HTML_FILTER).
+          echo '<li><a href="./cart.php">Cart(' .
+            $cart_size .
             ')</a></li>';
         } else {
           echo '<li><a href="./cart.php">Cart</a></li>';
@@ -70,8 +72,6 @@ define('HTML_FILTER', ENT_COMPAT | ENT_HTML5);
           echo '<li><a href="./register.php">Register</a></li>';
         }
         ?>
-        <li>Feedback</li>
-        <li>About</li>
       </ul>
     </div>
   </header>
@@ -87,7 +87,7 @@ define('HTML_FILTER', ENT_COMPAT | ENT_HTML5);
       </div>
     </div>
     <div class="nav-search-wrapper">
-      <form action="./search_results.php" method="post">
+      <form action="./search_results.php" method="get">
         <input class="search-input" type="search" name="q" placeholder="Search" />
         <input class="submit-input" type="submit" value="Search" />
       </form>
@@ -96,11 +96,11 @@ define('HTML_FILTER', ENT_COMPAT | ENT_HTML5);
   <?php
   if (isset($msg)) {
     $flash_status = $msg->is_success ? 'flash-good' : 'flash-bad';
-    echo '<div class="flash '.
-      htmlspecialchars($flash_status, HTML_FILTER).
+    echo '<div class="flash ' .
+      htmlspecialchars($flash_status, HTML_FILTER) .
       '">';
-    echo '<p>'.
-      htmlspecialchars($msg->text, HTML_FILTER).
+    echo '<p>' .
+      htmlspecialchars($msg->text, HTML_FILTER) .
       '</p>';
   } else {
     echo '<div class="flash">';

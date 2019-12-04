@@ -1,6 +1,8 @@
 <?php
+// Michael
+
 session_start();
-require('./utils.php');
+require_once('./utils.php');
 
 if (
   !isset($_POST['first_name']) ||
